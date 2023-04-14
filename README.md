@@ -50,12 +50,6 @@ This example demonstrates a simple representation of an Indian raga with microto
 
 Keep in mind that this is a simplified representation and may not fully capture the intricacies of the original raga.
 
-### Example 5: Expressive acid techno bass line
-
-    C{.}+ D{^}+ F{- .}+ G{^ .}+ C{.}(3) D{^}(3) F{- .}(3) G{^}(3)
-
-This bass line features a series of notes with microtonal adjustments, staccato articulations, and accents to create a driving rhythm. The pattern can be looped and played along with other synth sounds to create an acid techno vibe. The octave changes give it a sense of movement and energy.
-
 ### General info
 
 * Version: 1.0.0
