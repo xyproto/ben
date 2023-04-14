@@ -23,6 +23,10 @@ GPT-4 has been used as an assistant to help create this format.
   - Tenuto: Add an arrow (`->`) after the note, e.g., "C->". This indicates a note should be played with full duration, connecting smoothly with the next note. Tenuto can also be used to emphasize the connection between notes in a slur.
   - Velocity: Add a `v` after the note, e.g., "Cv". This indicates that the velocty should be reduced by 10% for this note.
 
+## Quick installation
+
+    go install github.com/ben/ben2mid@latest
+
 ## Examples
 
 ### Example 1: Simple Melody

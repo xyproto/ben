@@ -104,8 +104,6 @@ func benToFrequency(benNote string) (float64, int, byte, bool) {
 			continue
 		case '+':
 			currentOctave++
-		case '-':
-			currentOctave--
 		case ',':
 			duration = 48 // eighth note rest
 		case '~':
@@ -116,6 +114,20 @@ func benToFrequency(benNote string) (float64, int, byte, bool) {
 			duration = int(float64(duration) * 1.5) // accent
 		case 'v':
 			velocity = byte(float64(velocity) * 0.9)
+		case '-':
+			if i+1 < len(benNote) && benNote[i+1] == '>' {
+				// do nothing, handle in the next iteration
+			} else {
+				currentOctave--
+			}
+		case '>':
+			if i > 0 && benNote[i-1] == '-' {
+				duration = -1 // slur
+			} else {
+				duration = int(float64(duration) * 1.5) // accent
+			}
+		case '!':
+			velocity = 0 // mute the note
 		default:
 			return 0, 0, 0, false
 		}
