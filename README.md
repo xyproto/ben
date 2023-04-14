@@ -16,8 +16,8 @@ GPT-4 has been used as an assistant to help create this format.
 - Uppercase letters (e.g., "C", "D", "E") represent quarter notes (1 beat).
 - Uppercase letters followed by a forward slash (e.g., "C/", "D/", "E/") represent half notes (2 beats).
 - Repeating an uppercase letter twice (e.g., "CC", "DD", "EE") represents whole notes (4 beats).
-- Sharp notes are indicated with "+".
-- Flat notes are indicated with "-".
+- Sharp notes are indicated with "#".
+- Flat notes are indicated with "b".
 - Microtonal adjustments: Use "{" for a 1.818% decrease in pitch (which results in 440Hz being reduced to 432Hz), and "}" for the opposite (an increase of 1.818%). These percentages will be applied consistently across all notes for a more uniform effect.
 - Stronger dynamics are indicated with an exclamation mark (!).
 - Octave designations are given by appending a number in parentheses, e.g., "(3)" for the 3rd octave, "(5)" for the 5th octave, and omitting any designation for the normal (4th) octave. Use "-" for "the current octave - 1" and "+" for "the current octave + 1".
