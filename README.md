@@ -2,7 +2,7 @@
 
 Brief Expressive Notation (BEN) is a simple and efficient text-based music notation format designed for readability and expressiveness.
 
-GPT-4 has been used as an assistant.
+GPT-4 has been used as an assistant to help create this format.
 
 ## Format
 
