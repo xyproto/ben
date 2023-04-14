@@ -10,7 +10,7 @@ GPT-4 has been used as an assistant to help create this format.
 
     go install github.com/ben/ben2mid@latest
 
-## The BEN file format
+## Description of BEN
 
 - Lowercase letters (e.g., "c", "d", "e") represent eighth notes (0.5 beats).
 - Uppercase letters (e.g., "C", "D", "E") represent quarter notes (1 beat).
