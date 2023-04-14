@@ -10,6 +10,8 @@ GPT-4 has been used as an assistant to help create this format.
 
     go install github.com/ben/ben2mid@latest
 
+(The utility is a work in progress, but works for simple melodies).
+
 ## Description of BEN
 
 - Lowercase letters (e.g., "c", "d", "e") represent eighth notes (0.5 beats).
