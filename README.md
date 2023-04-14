@@ -1,10 +1,16 @@
-# Brief Expressive Notation (BEN)
+# Brief Expressive Notation
 
-Brief Expressive Notation (BEN) is a simple and efficient text-based music notation format designed for readability and expressiveness.
+Brief Expressive Notation is a simple and efficient text-based music notation format designed for readability and expressiveness, which includes support for microtonality.
+
+The `ben2mid` utility is included, which can convert `.ben` files to `.mid` (MIDI).
 
 GPT-4 has been used as an assistant to help create this format.
 
-## Format
+## Quick installation
+
+    go install github.com/ben/ben2mid@latest
+
+## The BEN file format
 
 - Lowercase letters (e.g., "c", "d", "e") represent eighth notes (0.5 beats).
 - Uppercase letters (e.g., "C", "D", "E") represent quarter notes (1 beat).
@@ -22,10 +28,6 @@ GPT-4 has been used as an assistant to help create this format.
   - Accent: Add a caret (`^`) after the note, e.g., "C^". This indicates a note should be played with more emphasis or force.
   - Tenuto: Add an arrow (`->`) after the note, e.g., "C->". This indicates a note should be played with full duration, connecting smoothly with the next note. Tenuto can also be used to emphasize the connection between notes in a slur.
   - Velocity: Add a `v` after the note, e.g., "Cv". This indicates that the velocty should be reduced by 10% for this note.
-
-## Quick installation
-
-    go install github.com/ben/ben2mid@latest
 
 ## Examples
 
