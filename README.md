@@ -35,19 +35,23 @@ GPT-4 has been used as an assistant to help create this format.
 
 This simple melody consists of quarter notes starting from C and going up to G, then back down to C.
 
-### Example 2: Melody with Articulations and Dynamics
+### Example 2: Simple Melody, with octave changes
+
+    C D# g b C(6) C- C- C+ f g g# a# C
+
+### Example 3: Melody with Articulations and Dynamics
 
     C^ D. E-> F G! F. E^ D C
 
 In this example, the same melody from Example 1 has been enhanced with articulations and dynamics: the first note (C) is accented, the second note (D) is staccato, the third note (E) is tenuto, and the fifth note (G) is played with stronger dynamics.
 
-### Example 3: Melody with Octave Changes and Microtonal Adjustments
+### Example 4: Melody with Octave Changes and Microtonal Adjustments
 
     C- D{(3) E}(5) F+ G{- F E(4) D C
 
 This example demonstrates a melody with octave changes and microtonal adjustments. The melody starts in the low octave, moves to the 3rd and 5th oct
 
-### Example 4: Indian Raga with Microtonal Adjustments
+### Example 5: Indian Raga with Microtonal Adjustments
 
     C (E{^}+ G{.}+ B{) C/! (D{^}+ F{.}+ A{) D/! C E{^}+ G{.}+ B{ C/! D{^}+ F{.}+ A{ D/!
 
