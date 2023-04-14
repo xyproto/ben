@@ -16,7 +16,7 @@ GPT-4 has been used as an assistant to help create this format.
 - Stronger dynamics are indicated with an exclamation mark (!).
 - Octave designations are given by appending a number in parentheses, e.g., "(3)" for the 3rd octave, "(5)" for the 5th octave, and omitting any designation for the normal (4th) octave. Use "-" for "the current octave - 1" and "+" for "the current octave + 1".
 - Rests are indicated with a comma (","), representing a quarter-note rest.
-- Slurs and ties are indicated by placing the connected notes in parentheses, e.g., "(C~D)" for a slur between C and D, or "(C~C)" for a tied C note.
+- Slurs and ties are indicated by placing the connected notes in parentheses, e.g., `(C~D)` for a slur between C and D, or `(C~C)` for a tied C note.
 - Articulations:
   - Staccato: Add a dot (`.`) after the note, e.g., "C.". This indicates a note should be played shorter than its full duration, with a brief silence between notes.
   - Accent: Add a caret (`^`) after the note, e.g., "C^". This indicates a note should be played with more emphasis or force.
@@ -38,6 +38,10 @@ This simple melody consists of quarter notes starting from C and going up to G, 
 ### Example 2: Simple Melody, with octave changes
 
     C D# g b C(6) C- C- C+ f g g# a# C
+
+## More examples
+
+Note that these examples needs more testing and are a work in progress.
 
 ### Example 3: Melody with Articulations and Dynamics
 
