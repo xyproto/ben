@@ -18,9 +18,10 @@ GPT-4 has been used as an assistant to help create this format.
 - Rests are indicated with a comma (","), representing a quarter-note rest.
 - Slurs and ties are indicated by placing the connected notes in parentheses, e.g., "(C~D)" for a slur between C and D, or "(C~C)" for a tied C note.
 - Articulations:
-  - Staccato: Add a dot (.) after the note, e.g., "C.". This indicates a note should be played shorter than its full duration, with a brief silence between notes.
-  - Accent: Add a caret (^) after the note, e.g., "C^". This indicates a note should be played with more emphasis or force.
-  - Tenuto: Add an arrow (->) after the note, e.g., "C->". This indicates a note should be played with full duration, connecting smoothly with the next note. Tenuto can also be used to emphasize the connection between notes in a slur.
+  - Staccato: Add a dot (`.`) after the note, e.g., "C.". This indicates a note should be played shorter than its full duration, with a brief silence between notes.
+  - Accent: Add a caret (`^`) after the note, e.g., "C^". This indicates a note should be played with more emphasis or force.
+  - Tenuto: Add an arrow (`->`) after the note, e.g., "C->". This indicates a note should be played with full duration, connecting smoothly with the next note. Tenuto can also be used to emphasize the connection between notes in a slur.
+  - Velocity: Add a `v` after the note, e.g., "Cv". This indicates that the velocty should be reduced by 10% for this note.
 
 ## Examples
 

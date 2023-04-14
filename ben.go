@@ -14,15 +14,15 @@ func processBenTrack(benTrack string) []MidiNote {
 	benNotes := strings.Split(benTrack, " ")
 
 	for _, benNote := range benNotes {
-		if freq, duration, ok := benToFrequency(benNote); ok {
-			midiNotes = append(midiNotes, MidiNote{Frequency: freq, Duration: duration})
+		if freq, duration, velocity, ok := benToFrequency(benNote); ok {
+			midiNotes = append(midiNotes, MidiNote{Frequency: freq, Duration: duration, Velocity: velocity})
 		}
 	}
 
 	return midiNotes
 }
 
-func benToFrequency(benNote string) (float64, int, bool) {
+func benToFrequency(benNote string) (float64, int, byte, bool) {
 	baseNotes := map[string]float64{
 		"C": 261.63,
 		"D": 293.66,
@@ -37,9 +37,10 @@ func benToFrequency(benNote string) (float64, int, bool) {
 	var frequency float64 = 0
 	var duration int = 96 // quarter note duration
 	var octaveMode bool = false
+	var velocity byte = 127 // the default is full velocity
 
 	// Parse note string
-	for _, c := range benNote {
+	for i, c := range benNote {
 		if octaveMode {
 			switch c {
 			case '-':
@@ -80,10 +81,16 @@ func benToFrequency(benNote string) (float64, int, bool) {
 		switch c {
 		case 'C', 'D', 'E', 'F', 'G', 'A', 'B', 'H':
 			frequency = baseNotes[string(c)]
-			fmt.Println("TO IMPLEMENT: ALSO MODIFY THE DURATION")
+			if i+1 < len(benNote) && benNote[i+1] == '/' {
+				duration = 192 // half note duration
+			} else if i+1 < len(benNote) && c == rune(benNote[i+1]) {
+				duration = 384 // whole note duration
+			} else {
+				duration = 96 // quarter note duration
+			}
 		case 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'h':
 			frequency = baseNotes[strings.ToUpper(string(c))]
-			fmt.Println("TO IMPLEMENT: ALSO MODIFY THE DURATION")
+			duration = 48 // eighth note duration
 		case '{':
 			frequency *= 0.98181818181 // 1.818% decrease
 		case '}':
@@ -101,15 +108,15 @@ func benToFrequency(benNote string) (float64, int, bool) {
 		case ',':
 			duration = 48 // eighth note rest
 		case '~':
-			fmt.Println("TO IMPLEMENT: SLURS AND TIES")
+			duration = -1 // special value for slurs
 		case '.':
 			duration /= 2 // staccato
 		case '^':
-			fmt.Println("TO IMPLEMENT: ACCENTS")
-		case '/':
-			fmt.Println("TO IMPLEMENT: WHOLE NOTES")
+			duration = int(float64(duration) * 1.5) // accent
+		case 'v':
+			velocity = byte(float64(velocity) * 0.9)
 		default:
-			return 0, 0, false
+			return 0, 0, 0, false
 		}
 	}
 
@@ -120,7 +127,7 @@ func benToFrequency(benNote string) (float64, int, bool) {
 		frequency = 0
 	}
 
-	fmt.Printf("%s ==> %fHz, %d\n", benNote, frequency, duration)
+	fmt.Printf("%s ==> %fHz, %d duration, %d velocity\n", benNote, frequency, duration, velocity)
 
-	return frequency, duration, true
+	return frequency, duration, velocity, true
 }

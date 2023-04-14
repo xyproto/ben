@@ -9,6 +9,7 @@ import (
 type MidiNote struct {
 	Frequency float64
 	Duration  int
+	Velocity  byte
 }
 
 func frequencyToMidi(freq float64) (int, int) {
@@ -48,6 +49,24 @@ func writePitchBend(trackData []byte, pitchBend int) []byte {
 	return trackData
 }
 
+func writeNoteOn(trackData []byte, channel int, midiNote int, velocity byte) []byte {
+	trackData = append(trackData, 0x00)                 // Delta time (0 ticks)
+	trackData = append(trackData, byte(0x90+channel-1)) // Note on, channel
+	trackData = append(trackData, byte(midiNote))
+	trackData = append(trackData, velocity) // Velocity
+
+	return trackData
+}
+
+func writeNoteOff(trackData []byte, channel int, midiNote int, ticks int) []byte {
+	trackData = append(trackData, byte(ticks))          // Delta time (ticks)
+	trackData = append(trackData, byte(0x80+channel-1)) // Note off, channel
+	trackData = append(trackData, byte(midiNote))
+	trackData = append(trackData, byte(0x00)) // Velocity
+
+	return trackData
+}
+
 func writeTrack(w io.Writer, notes []MidiNote, channel int) {
 	// Prepare track data
 	trackData := make([]byte, 0)
@@ -57,18 +76,10 @@ func writeTrack(w io.Writer, notes []MidiNote, channel int) {
 		trackData = writePitchBend(trackData, pitchBend)
 
 		// Note on
-		trackData = append(trackData, 0x00) // Delta time (0 ticks)
-		trackData = append(trackData, 0x90) // Note on, channel 1
-		// byte(0x90+channel-1)) // Note on, channel
-		trackData = append(trackData, byte(midiNote))
-		trackData = append(trackData, byte(0x60)) // Velocity (0x60)
+		writeNoteOn(trackData, channel, midiNote, note.Velocity)
 
 		// Note off
-		trackData = append(trackData, byte(note.Duration)) // Delta time (ticks)
-		trackData = append(trackData, 0x80)                // Note off, channel 1
-		//byte(0x80+channel-1)) // Note off, channel
-		trackData = append(trackData, byte(midiNote))
-		trackData = append(trackData, byte(0x00)) // Velocity (0x00)
+		writeNoteOff(trackData, note.Duration, channel, midiNote)
 	}
 
 	// End of track event
