@@ -33,11 +33,12 @@ func benToFrequency(benNote string) (float64, int, byte, bool) {
 		"B": 493.88,
 		"H": 493.88,
 	}
-
-	var frequency float64 = 0
-	var duration int = 96 // quarter note duration
-	var octaveMode bool = false
-	var velocity byte = 127 // the default is full velocity
+	var (
+		frequency  float64
+		duration        = 96 // quarter note duration
+		octaveMode      = false
+		velocity   byte = 127 // the default is full velocity
+	)
 
 	// Parse note string
 	for i, c := range benNote {

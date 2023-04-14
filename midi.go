@@ -70,16 +70,36 @@ func writeNoteOff(trackData []byte, channel int, midiNote int, ticks int) []byte
 func writeTrack(w io.Writer, notes []MidiNote, channel int) {
 	// Prepare track data
 	trackData := make([]byte, 0)
-	for _, note := range notes {
+	var lastNoteDuration int
+	var lastMidiNote int
+	for i, note := range notes {
 		midiNote, pitchBend := frequencyToMidi(note.Frequency)
 
 		trackData = writePitchBend(trackData, pitchBend)
 
 		// Note on
-		writeNoteOn(trackData, channel, midiNote, note.Velocity)
+		if i > 0 && notes[i-1].Duration == -1 {
+			// Handle slurs
+			writeNoteOn(trackData, channel, lastMidiNote, note.Velocity)
+		} else {
+			// Normal note on
+			writeNoteOn(trackData, channel, midiNote, note.Velocity)
+		}
 
 		// Note off
-		writeNoteOff(trackData, note.Duration, channel, midiNote)
+		if note.Duration != -1 {
+			writeNoteOff(trackData, channel, midiNote, note.Duration)
+			lastNoteDuration = note.Duration
+			lastMidiNote = midiNote
+		} else {
+			// Handle slurs
+			if lastNoteDuration != -1 {
+				trackData = append(trackData, byte(lastNoteDuration))
+				trackData = append(trackData, 0x80+byte(channel-1))
+				trackData = append(trackData, byte(lastMidiNote))
+				trackData = append(trackData, byte(0x00))
+			}
+		}
 	}
 
 	// End of track event
