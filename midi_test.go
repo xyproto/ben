@@ -12,7 +12,7 @@ func TestWriteTrack(t *testing.T) {
 		{Frequency: 261.63, Duration: 96, Velocity: 127},
 		{Frequency: 293.66, Duration: 96, Velocity: 127},
 		{Frequency: 329.63, Duration: 96, Velocity: 127},
-	}, 1)
+	})
 
 	expected := []byte{
 		77, 84, 114, 107, // MTrk

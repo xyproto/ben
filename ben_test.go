@@ -20,7 +20,7 @@ func TestProcessBenTrack(t *testing.T) {
 		{Duration: 96},
 	}
 
-	midiNotes := processBenTrack(benInput)
+	midiNotes := ProcessBenTrack(benInput)
 
 	if len(midiNotes) != len(expectedMidiNotes) {
 		t.Fatalf("Expected %d midi notes, got %d", len(expectedMidiNotes), len(midiNotes))
