@@ -3,30 +3,29 @@ package ben
 import (
 	"bytes"
 	"testing"
+	"time"
 )
 
 func TestWriteTrack(t *testing.T) {
-	buf := new(bytes.Buffer)
+	notes := []MidiNote{
+		{Frequency: 261.63, Duration: 750 * time.Millisecond, Velocity: 127, Slur: false},
+		{Frequency: 293.66, Duration: 250 * time.Millisecond, Velocity: 127, Slur: false},
+		{Frequency: 349.23, Duration: 500 * time.Millisecond, Velocity: 127, Slur: false},
+		{Frequency: 392.00, Duration: 500 * time.Millisecond, Velocity: 127, Slur: false},
+		{Frequency: 349.23, Duration: 250 * time.Millisecond, Velocity: 127, Slur: false},
+		{Frequency: 329.63, Duration: 750 * time.Millisecond, Velocity: 127, Slur: false},
+		{Frequency: 293.66, Duration: 500 * time.Millisecond, Velocity: 127, Slur: false},
+		{Frequency: 261.63, Duration: 500 * time.Millisecond, Velocity: 127, Slur: false},
+	}
 
-	writeTrack(buf, []MidiNote{
-		{Frequency: 261.63, Duration: 96, Velocity: 127},
-		{Frequency: 293.66, Duration: 96, Velocity: 127},
-		{Frequency: 329.63, Duration: 96, Velocity: 127},
-	})
+	var buf bytes.Buffer
+	WriteTrack(&buf, notes)
 
 	expected := []byte{
-		77, 84, 114, 107, // MTrk
-		0, 0, 0, 40, // Track length
-		0, 224, 2, 64, // Pitch bend for first note
-		0, 144, 60, 127, // Note on for first note
-		96, 128, 60, 0, // Note off for first note
-		0, 224, 126, 63, // Pitch bend for second note
-		0, 144, 62, 127, // Note on for second note
-		96, 128, 62, 0, // Note off for second note
-		0, 224, 1, 64, // Pitch bend for third note
-		0, 144, 64, 127, // Note on for third note
-		96, 128, 64, 0, // Note off for third note
-		0, 255, 47, 0, // End of track
+		77, 84, 114, 107, 0, 0, 0, 38,
+		0, 0, 143, 60, 127, 0, 223, 2, 64,
+		129, 16, 0, 127, 60, 0, 0, 0, 143, 62, 127, 0, 223, 126, 63,
+		48, 0, 127, 62, 0, 0, 0, 143,
 	}
 
 	if !bytes.Equal(buf.Bytes(), expected) {

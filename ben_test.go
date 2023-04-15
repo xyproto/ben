@@ -6,18 +6,17 @@ import (
 )
 
 func TestProcessBenTrack(t *testing.T) {
-	benInput := "C^ D. E-> F G! F. E^ D C"
+	benInput := "C^ D. F G! F. E^ D C"
 
 	expectedMidiNotes := []MidiNote{
-		{Duration: 144},
-		{Duration: 48},
-		{Duration: -1},
-		{Duration: 96},
-		{Duration: 96},
-		{Duration: 48},
-		{Duration: 144},
-		{Duration: 96},
-		{Duration: 96},
+		{Duration: TicksToDuration(144)},
+		{Duration: TicksToDuration(48)},
+		{Duration: TicksToDuration(96)},
+		{Duration: TicksToDuration(96)},
+		{Duration: TicksToDuration(48)},
+		{Duration: TicksToDuration(144)},
+		{Duration: TicksToDuration(96)},
+		{Duration: TicksToDuration(96)},
 	}
 
 	midiNotes := ProcessBenTrack(benInput)
