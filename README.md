@@ -4,13 +4,13 @@ Brief Expressive Notation is a simple and efficient text-based music notation fo
 
 The `ben2mid` utility is included, which can convert `.ben` files to `.mid` (MIDI).
 
+The utility is a work in progress, but works for simple files.
+
 GPT-4 has been used as an assistant to help create this format.
 
 ## Quick installation
 
     go install github.com/ben/ben2mid@latest
-
-(The utility is a work in progress, but works for simple melodies).
 
 ## Description of BEN
 
