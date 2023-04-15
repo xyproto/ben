@@ -8,7 +8,7 @@ GPT-4 has been used as an assistant to help create this format.
 
 ## Quick installation
 
-    go install github.com/ben/ben2mid@latest
+    go install github.com/ben/cmd/ben2mid@latest
 
 ## Description of BEN
 
