@@ -9,6 +9,7 @@ import (
 
 	"github.com/urfave/cli/v2"
 	"github.com/xyproto/ben"
+	"github.com/xyproto/midi"
 )
 
 func main() {
@@ -49,7 +50,7 @@ func main() {
 				return fmt.Errorf("please provide an output file or a synth device index")
 			}
 
-			var midiTracks [][]ben.MidiNote
+			var midiTracks [][]midi.Note
 			for _, inputFile := range c.Args().Slice() {
 				content, err := os.ReadFile(inputFile)
 				if err != nil {
@@ -71,7 +72,7 @@ func main() {
 				return ben.PlayWithSynth(deviceIndex, midiTracks)
 			}
 
-			midiData, err := ben.ConvertToMIDI(midiTracks)
+			midiData, err := midi.ConvertToMIDI(midiTracks)
 			if err != nil {
 				return fmt.Errorf("error converting BEN to MIDI: %v", err)
 			}

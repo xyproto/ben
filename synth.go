@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/xyproto/midi"
 )
 
 func ListMIDIOutDevices() (string, error) {
@@ -28,7 +30,7 @@ func ListMIDIOutDevices() (string, error) {
 	return sb.String(), nil
 }
 
-func PlayWithSynth(midiOutDevice int, tracks [][]MidiNote) error {
+func PlayWithSynth(midiOutDevice int, tracks [][]midi.Note) error {
 	devPath := "/dev"
 
 	files, err := os.ReadDir(devPath)
@@ -63,29 +65,29 @@ func PlayWithSynth(midiOutDevice int, tracks [][]MidiNote) error {
 
 	for trackIndex, track := range tracks {
 		for _, note := range track {
-			midiNote, pitchBend := FrequencyToMidi(note.Frequency)
+			midiNote, pitchBend := midi.FrequencyToMidi(note.Frequency)
 
 			if note.Channel != -1 {
 				// Set the instrument (program)
-				WriteProgramChange(device, note.Channel, note.Instrument)
+				midi.WriteProgramChange(device, note.Channel, note.Instrument)
 
 				// Set the pitch bend
 				if pitchBend != 8192 {
-					WritePitchBend(device, note.Channel, pitchBend)
+					midi.WritePitchBend(device, note.Channel, pitchBend)
 				}
 
 				// Note On
-				WriteNoteOn(device, note.Channel, midiNote, note.Velocity)
+				midi.WriteNoteOn(device, note.Channel, midiNote, note.Velocity)
 
 				// Sleep for note duration
 				time.Sleep(time.Duration(note.Duration) * time.Millisecond)
 
 				// Note Off
-				WriteNoteOff(device, note.Channel, midiNote, DurationToTicks(note.Duration))
+				midi.WriteNoteOff(device, note.Channel, midiNote, DurationToTicks(note.Duration))
 
 				// Reset the pitch bend
 				if pitchBend != 8192 {
-					WritePitchBend(device, note.Channel, 8192)
+					midi.WritePitchBend(device, note.Channel, 8192)
 				}
 			}
 		}

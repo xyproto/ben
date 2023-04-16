@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/xyproto/midi"
 )
 
 var (
@@ -13,12 +15,12 @@ var (
 	currentBPM    = 120
 )
 
-func ParseBenTrack(benTrack string) ([]MidiNote, error) {
-	var midiNotes []MidiNote
+func ParseBenTrack(benTrack string) ([]midi.Note, error) {
+	var midiNotes []midi.Note
 	benNotes := strings.Split(strings.TrimSpace(benTrack), " ")
 	for _, benNote := range benNotes {
 		if freq, duration, velocity, channel, instrument, slur, ok := NoteToFrequency(strings.TrimSpace(benNote)); ok {
-			midiNotes = append(midiNotes, MidiNote{Frequency: freq, Duration: duration, Velocity: velocity, Channel: channel, Instrument: instrument, Slur: slur})
+			midiNotes = append(midiNotes, midi.Note{Frequency: freq, Duration: duration, Velocity: velocity, Channel: channel, Instrument: instrument, Slur: slur})
 		} else {
 			return nil, fmt.Errorf("could not parse this note: %q", benNote)
 		}

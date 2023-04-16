@@ -5,16 +5,18 @@ import (
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/xyproto/midi"
 )
 
 func TestConvertToMIDI(t *testing.T) {
-	notes := []MidiNote{
+	notes := []midi.Note{
 		{Frequency: 440, Duration: time.Second, Velocity: 127, Channel: 1, Instrument: 0, Slur: false},
 		{Frequency: 880, Duration: time.Second, Velocity: 127, Channel: 1, Instrument: 0, Slur: false},
 		{Frequency: 220, Duration: time.Second, Velocity: 127, Channel: 1, Instrument: 0, Slur: false},
 	}
-	tracks := [][]MidiNote{notes}
-	data, err := ConvertToMIDI(tracks)
+	tracks := [][]midi.Note{notes}
+	data, err := midi.ConvertToMIDI(tracks)
 	if err != nil {
 		t.Errorf("ConvertToMIDI returned an error: %v", err)
 	}
@@ -28,7 +30,7 @@ func TestConvertToMIDI(t *testing.T) {
 func TestProcessBenTrack(t *testing.T) {
 	benInput := "C^ D. F G! F. E^ D C"
 
-	expectedMidiNotes := []MidiNote{
+	expectedNotes := []midi.Note{
 		{Duration: TicksToDuration(144)},
 		{Duration: TicksToDuration(48)},
 		{Duration: TicksToDuration(96)},
@@ -44,13 +46,13 @@ func TestProcessBenTrack(t *testing.T) {
 		t.Errorf("ParseBenTrack: %v", err)
 	}
 
-	if len(midiNotes) != len(expectedMidiNotes) {
-		t.Fatalf("Expected %d midi notes, got %d", len(expectedMidiNotes), len(midiNotes))
+	if len(midiNotes) != len(expectedNotes) {
+		t.Fatalf("Expected %d midi notes, got %d", len(expectedNotes), len(midiNotes))
 	}
 
-	for i, expectedMidiNote := range expectedMidiNotes {
-		if !reflect.DeepEqual(expectedMidiNote.Duration, midiNotes[i].Duration) {
-			t.Errorf("MidiNote[%d] durations do not match. Expected %d, got %d", i, expectedMidiNote.Duration, midiNotes[i].Duration)
+	for i, expectedNote := range expectedNotes {
+		if !reflect.DeepEqual(expectedNote.Duration, midiNotes[i].Duration) {
+			t.Errorf("midi.Note[%d] durations do not match. Expected %d, got %d", i, expectedNote.Duration, midiNotes[i].Duration)
 		}
 	}
 }
