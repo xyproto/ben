@@ -1,5 +1,7 @@
 # Brief Expressive Notation
 
+## THIS IS A WORK IN PROGRESS
+
 Brief Expressive Notation is a simple and efficient text-based music notation format designed for readability and expressiveness, which includes support for microtonality.
 
 The ben2mid utility is included, which can convert .ben files to .mid (MIDI).
