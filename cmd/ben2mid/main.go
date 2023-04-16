@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/urfave/cli/v2"
 	"github.com/xyproto/ben"
@@ -36,7 +37,11 @@ func main() {
 			synthDevice := c.String("synth-device")
 
 			if listDevices {
-				ben.ListMIDIOutDevices()
+				s, err := ben.ListMIDIOutDevices()
+				if err != nil {
+					return fmt.Errorf("error listing MIDI output devices: %v", err)
+				}
+				fmt.Println(strings.TrimSpace(s))
 				return nil
 			}
 
@@ -63,8 +68,7 @@ func main() {
 				if err != nil {
 					return fmt.Errorf("invalid synth device index: %v", err)
 				}
-				ben.PlayWithSynth(deviceIndex, midiTracks)
-				return nil
+				return ben.PlayWithSynth(deviceIndex, midiTracks)
 			}
 
 			midiData, err := ben.ConvertToMIDI(midiTracks)
