@@ -8,32 +8,32 @@ import (
 	"time"
 )
 
-func ListMIDIOutDevices() {
+func ListMIDIOutDevices() (string, error) {
+	var sb strings.Builder
 	devPath := "/dev"
 
 	files, err := os.ReadDir(devPath)
 	if err != nil {
-		fmt.Println("Error: ", err)
-		return
+		return "", nil
 	}
 
-	fmt.Println("Available MIDI out devices:")
+	sb.WriteString("Available MIDI out devices:\n")
 	deviceIndex := 0
 	for _, file := range files {
 		if strings.HasPrefix(file.Name(), "midi") {
-			fmt.Printf("[%d] %s\n", deviceIndex, file.Name())
+			sb.WriteString(fmt.Sprintf("[%d] %s\n", deviceIndex, file.Name()))
 			deviceIndex++
 		}
 	}
+	return sb.String(), nil
 }
 
-func PlayWithSynth(midiOutDevice int, tracks [][]MidiNote) {
+func PlayWithSynth(midiOutDevice int, tracks [][]MidiNote) error {
 	devPath := "/dev"
 
 	files, err := os.ReadDir(devPath)
 	if err != nil {
-		fmt.Println("Error: ", err)
-		return
+		return err
 	}
 
 	midiDeviceFound := false
@@ -51,15 +51,13 @@ func PlayWithSynth(midiOutDevice int, tracks [][]MidiNote) {
 	}
 
 	if !midiDeviceFound {
-		fmt.Println("Invalid MIDI out device index")
-		return
+		return fmt.Errorf("invalid MIDI out device index: %d", midiOutDevice)
 	}
 
 	devicePath := filepath.Join(devPath, deviceFile)
 	device, err := os.OpenFile(devicePath, os.O_WRONLY, 0)
 	if err != nil {
-		fmt.Println("Error opening MIDI out device: ", err)
-		return
+		return fmt.Errorf("error opening MIDI out device: %v", err)
 	}
 	defer device.Close()
 
@@ -97,4 +95,6 @@ func PlayWithSynth(midiOutDevice int, tracks [][]MidiNote) {
 			time.Sleep(1 * time.Second)
 		}
 	}
+
+	return nil
 }

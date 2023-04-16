@@ -14,11 +14,10 @@ var (
 )
 
 func ParseBenTrack(benTrack string) ([]MidiNote, error) {
-	fmt.Println("PARSING: " + benTrack)
 	var midiNotes []MidiNote
 	benNotes := strings.Split(strings.TrimSpace(benTrack), " ")
 	for _, benNote := range benNotes {
-		if freq, duration, velocity, channel, instrument, slur, ok := BenToFrequency(strings.TrimSpace(benNote)); ok {
+		if freq, duration, velocity, channel, instrument, slur, ok := NoteToFrequency(strings.TrimSpace(benNote)); ok {
 			midiNotes = append(midiNotes, MidiNote{Frequency: freq, Duration: duration, Velocity: velocity, Channel: channel, Instrument: instrument, Slur: slur})
 		} else {
 			return nil, fmt.Errorf("could not parse this note: %q", benNote)
@@ -27,7 +26,7 @@ func ParseBenTrack(benTrack string) ([]MidiNote, error) {
 	return midiNotes, nil
 }
 
-func BenToFrequency(benNote string) (float64, time.Duration, byte, int, int, bool, bool) {
+func NoteToFrequency(benNote string) (float64, time.Duration, byte, int, int, bool, bool) {
 	baseNotes := map[string]float64{
 		"C": 261.63,
 		"D": 293.66,
@@ -131,6 +130,7 @@ func BenToFrequency(benNote string) (float64, time.Duration, byte, int, int, boo
 		case '-':
 			if i+1 < len(benNote) && benNote[i+1] == '>' {
 				// do nothing, handle in the next iteration
+				continue
 			} else {
 				currentOctave--
 			}
@@ -184,8 +184,6 @@ func BenToFrequency(benNote string) (float64, time.Duration, byte, int, int, boo
 	if frequency < 0 {
 		frequency = 0
 	}
-
-	fmt.Printf("%s ==> %fHz, %d duration, %d velocity, slur %v\n", benNote, frequency, duration, velocity, slur)
 
 	return frequency, duration, velocity, channel, instrument, slur, true
 }
