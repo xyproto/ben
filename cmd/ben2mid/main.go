@@ -1,72 +1,88 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"strconv"
 
+	"github.com/urfave/cli/v2"
 	"github.com/xyproto/ben"
 )
 
 func main() {
-	input := flag.String("i", "", "Input file (.ben)")
-	output := flag.String("o", "", "Output file (.mid)")
-	listDevices := flag.Bool("l", false, "List MIDI devices")
-	synthDevice := flag.String("s", "", "Play with external synth (device index, use -l to list)")
-	flag.Parse()
+	app := &cli.App{
+		Name:  "ben2mid",
+		Usage: "Convert BEN files to MIDI",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:     "output",
+				Aliases:  []string{"o"},
+				Usage:    "Output file (.mid)",
+				Required: true,
+			},
+			&cli.BoolFlag{
+				Name:  "list-devices",
+				Usage: "List MIDI devices",
+			},
+			&cli.StringFlag{
+				Name:  "synth-device",
+				Usage: "Play with external synth (device index, use --list-devices to list)",
+			},
+		},
+		Action: func(c *cli.Context) error {
+			output := c.String("output")
+			listDevices := c.Bool("list-devices")
+			synthDevice := c.String("synth-device")
 
-	if *listDevices {
-		ben.ListDevices()
-		return
+			if listDevices {
+				ben.ListMIDIOutDevices()
+				return nil
+			}
+
+			if output == "" && synthDevice == "" {
+				return fmt.Errorf("please provide an output file or a synth device index")
+			}
+
+			var midiTracks [][]ben.MidiNote
+			for _, inputFile := range c.Args().Slice() {
+				content, err := os.ReadFile(inputFile)
+				if err != nil {
+					return fmt.Errorf("error reading input file: %v", err)
+				}
+
+				parsedBEN, err := ben.ParseBenTrack(string(content))
+				if err != nil {
+					return fmt.Errorf("error parsing %s: %v", inputFile, err)
+				}
+				midiTracks = append(midiTracks, parsedBEN)
+			}
+
+			if synthDevice != "" {
+				deviceIndex, err := strconv.Atoi(synthDevice)
+				if err != nil {
+					return fmt.Errorf("invalid synth device index: %v", err)
+				}
+				ben.PlayWithSynth(deviceIndex, midiTracks)
+				return nil
+			}
+
+			midiData, err := ben.ConvertToMIDI(midiTracks)
+			if err != nil {
+				return fmt.Errorf("error converting BEN to MIDI: %v", err)
+			}
+
+			err = ioutil.WriteFile(output, midiData, 0644)
+			if err != nil {
+				return fmt.Errorf("error writing output file: %v", err)
+			}
+
+			return nil
+		},
 	}
 
-	if *input == "" {
-		fmt.Println("Please provide an input file.")
-		flag.Usage()
-		return
-	}
-
-	if *output == "" && *synthDevice == "" {
-		fmt.Println("Please provide an output file or a synth device index.")
-		flag.Usage()
-		return
-	}
-
-	content, err := ioutil.ReadFile(*input)
+	err := app.Run(os.Args)
 	if err != nil {
-		fmt.Println("Error reading input file:", err)
-		return
-	}
-
-	parsedBEN, err := ben.ParseBEN(string(content))
-	if err != nil {
-		fmt.Println("Error parsing BEN:", err)
-		return
-	}
-
-	if *synthDevice != "" {
-		deviceIndex, err := strconv.Atoi(*synthDevice)
-		if err != nil {
-			fmt.Println("Invalid synth device index:", err)
-			return
-		}
-		err = ben.PlayWithSynth(parsedBEN, deviceIndex)
-		if err != nil {
-			fmt.Println("Error playing with synth:", err)
-		}
-		return
-	}
-
-	midiData, err := ben.ConvertToMIDI(parsedBEN)
-	if err != nil {
-		fmt.Println("Error converting BEN to MIDI:", err)
-		return
-	}
-
-	err = ioutil.WriteFile(*output, midiData, 0644)
-	if err != nil {
-		fmt.Println("Error writing output file:", err)
-		return
+		fmt.Println(err)
 	}
 }

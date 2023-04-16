@@ -3,6 +3,7 @@ package ben
 import (
 	"fmt"
 	"math"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -12,18 +13,18 @@ var (
 	currentBPM    = 120
 )
 
-func ProcessBenTrack(benTrack string) []MidiNote {
-	fmt.Println("PROCESSING: " + benTrack)
+func ParseBenTrack(benTrack string) ([]MidiNote, error) {
+	fmt.Println("PARSING: " + benTrack)
 	var midiNotes []MidiNote
-	benNotes := strings.Split(benTrack, " ")
-
+	benNotes := strings.Split(strings.TrimSpace(benTrack), " ")
 	for _, benNote := range benNotes {
-		if freq, duration, velocity, channel, instrument, slur, ok := BenToFrequency(benNote); ok {
+		if freq, duration, velocity, channel, instrument, slur, ok := BenToFrequency(strings.TrimSpace(benNote)); ok {
 			midiNotes = append(midiNotes, MidiNote{Frequency: freq, Duration: duration, Velocity: velocity, Channel: channel, Instrument: instrument, Slur: slur})
+		} else {
+			return nil, fmt.Errorf("could not parse this note: %q", benNote)
 		}
 	}
-
-	return midiNotes
+	return midiNotes, nil
 }
 
 func BenToFrequency(benNote string) (float64, time.Duration, byte, int, int, bool, bool) {
@@ -96,9 +97,15 @@ func BenToFrequency(benNote string) (float64, time.Duration, byte, int, int, boo
 			} else {
 				duration = TicksToDuration(96) // quarter note duration
 			}
+			if i+1 < len(benNote) && (benNote[i+1] == '#' || benNote[i+1] == 'b') && i+2 < len(benNote) && benNote[i+2] == '(' {
+				octaveMode = true
+			}
 		case 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'h':
 			frequency = baseNotes[strings.ToUpper(string(c))]
 			duration = TicksToDuration(48) // eighth note duration
+			if i+1 < len(benNote) && (benNote[i+1] == '#' || benNote[i+1] == 'b') && i+2 < len(benNote) && benNote[i+2] == '(' {
+				octaveMode = true
+			}
 		case '{':
 			frequency *= 0.98181818181 // 1.818% decrease
 		case '}':
@@ -157,6 +164,13 @@ func BenToFrequency(benNote string) (float64, time.Duration, byte, int, int, boo
 					i++ // Skip the instrument digit
 				} else {
 					instrument = -1
+				}
+			}
+		case 'T':
+			if i+1 < len(benNote) {
+				tempo, err := strconv.Atoi(benNote[i+1:])
+				if err == nil && tempo > 0 {
+					currentBPM = tempo
 				}
 			}
 		default:

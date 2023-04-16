@@ -8,7 +8,7 @@ A BEN file consists of one or more tracks, separated by newlines. Each track is 
 
 ### Notes
 
-Notes are represented by uppercase or lowercase letters A-G (or H, as an alias for B), optionally followed by an accidental (# for sharp, b for flat). 
+Notes are represented by uppercase or lowercase letters A-G (or H, as an alias for B), optionally followed by an accidental (# for sharp, b for flat).
 
 Examples:
 - C: C note in the current octave
@@ -38,11 +38,12 @@ To change the velocity of a note, use the following command:
 - v: decrease the velocity by 10%
 - !n: set the velocity to n * 10%, where n is a single hexadecimal digit (0-F)
 
-### MIDI Channel and Program Changes
+### MIDI Channel, Program Changes and Tempo
 
 To change the MIDI channel and program, use the following commands:
-- [n]: set the MIDI channel to n, where n is an integer between 1 and 16
-- {n}: set the MIDI program to n, where n is an integer between 0 and 127
+- @n: set the MIDI channel to n, where n is an integer between 1 and 16
+- *n: set the MIDI program to n, where n is an integer between 0 and 127
+- Tn: set the tempo to n BPM, like 80 or 120
 
 ## Examples
 
@@ -52,7 +53,7 @@ C D E F G A B H
 
 And a more complex example using various modifiers:
 
-C +C -C c c/ c// c. c^ , !A C vC {10}C [2]C
+C +C -C c c/ c// c. c^ , !A C vC @10 C *2 C
 
 ## Implementation Notes
 

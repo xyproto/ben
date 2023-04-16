@@ -1,6 +1,7 @@
 package ben
 
 import (
+	"bytes"
 	"io"
 	"math"
 	"time"
@@ -25,11 +26,19 @@ func FrequencyToMidi(freq float64) (int, int) {
 	return midiNoteRounded, pitchBend
 }
 
-func WriteMidiFile(w io.Writer, tracks [][]MidiNote) {
-	WriteHeader(w, len(tracks))
+func ConvertToMIDI(tracks [][]MidiNote) ([]byte, error) {
+	buf := new(bytes.Buffer)
+	WriteHeader(buf, len(tracks))
 	for _, track := range tracks {
-		WriteTrack(w, track)
+		if err := WriteTrack(buf, track); err != nil {
+			return nil, err
+		}
 	}
+	return buf.Bytes(), nil
+}
+
+func ConvertToMIDITracks(parsedBEN []MidiNote) [][]MidiNote {
+	return [][]MidiNote{parsedBEN}
 }
 
 func WriteHeader(w io.Writer, numTracks int) {
