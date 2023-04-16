@@ -1,0 +1,8 @@
+.DS_Store
+input.txt
+*.bak
+*.swp
+*.tmp
+*.o
+cmd/pm/pm
+cmd/simple/simple
