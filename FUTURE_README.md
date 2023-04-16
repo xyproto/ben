@@ -69,5 +69,5 @@ This example demonstrates an ACID synth bass pattern. The bass starts with a str
 
 ## General info
 
-* Version: 1.0.1
+* Version: 1.0.2
 * License: BSD-3
